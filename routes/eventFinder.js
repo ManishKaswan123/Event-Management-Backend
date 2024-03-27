@@ -39,8 +39,8 @@ router.get('/find', async (req, res) => {
       .limit(pageSize);
 
       // Make parallel calls to Weather API and Distance Calculation API for the events on this page
-      const weatherPromises = events.map(event => axios.get(`https://gg-backend-assignment.azurewebsites.net/api/Weather?code=${WEATHER_API_KEY}&city=${encodeURIComponent(event.cityName)}&date=${event.date}`));
-      const distancePromises = events.map(event => axios.get(`https://gg-backend-assignment.azurewebsites.net/api/Distance?code=${DISTANCE_API_KEY}&latitude1=${latitude}&longitude1=${longitude}&latitude2=${event.latitude}&longitude2=${event.longitude}`));
+      const weatherPromises = events.map(event => axios.get(`${WEATHER_API_KEY}&city=${encodeURIComponent(event.cityName)}&date=${event.date}`));
+      const distancePromises = events.map(event => axios.get(`${DISTANCE_API_KEY}&latitude1=${latitude}&longitude1=${longitude}&latitude2=${event.latitude}&longitude2=${event.longitude}`));
 
       // Await all promises
       const [weatherResponses, distanceResponses] = await Promise.all([Promise.all(weatherPromises), Promise.all(distancePromises)]);
