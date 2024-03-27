@@ -7,13 +7,14 @@ const eventCreatorRouter = require('./routes/events');
 const eventFinderRouter = require('./routes/eventFinder');
 
 const app = express();
+const DB_URL = process.env.DB_URL;
 const PORT = process.env.PORT || 4000;
 
 app.use(cors());
 app.use(express.json()); // Middleware to parse JSON bodies
 
 // Connect to MongoDB Atlas
-mongoose.connect('mongodb+srv://manishkaswan88:gJLrwn18LEN6qooi@cluster0.z3dh8rj.mongodb.net/', {
+mongoose.connect(`${DB_URL}`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     serverSelectionTimeoutMS: 5000, // Example value, adjust as needed
