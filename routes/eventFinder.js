@@ -1,7 +1,10 @@
+require('dotenv').config();
 const express = require('express');
 const router = express.Router();
 const Event = require('../models/eventModel');
 const axios = require('axios');
+const WEATHER_API_KEY = process.env.WEATHER_API_KEY;
+const DISTANCE_API_KEY = process.env.DISTANCE_API_KEY;
 
 router.get('/find', async (req, res) => {
   const { latitude, longitude, date, page = 1 } = req.query;
@@ -36,8 +39,8 @@ router.get('/find', async (req, res) => {
       .limit(pageSize);
 
       // Make parallel calls to Weather API and Distance Calculation API for the events on this page
-      const weatherPromises = events.map(event => axios.get(`https://gg-backend-assignment.azurewebsites.net/api/Weather?code=KfQnTWHJbg1giyB_Q9Ih3Xu3L9QOBDTuU5zwqVikZepCAzFut3rqsg==&city=${encodeURIComponent(event.cityName)}&date=${event.date}`));
-      const distancePromises = events.map(event => axios.get(`https://gg-backend-assignment.azurewebsites.net/api/Distance?code=IAKvV2EvJa6Z6dEIUqqd7yGAu7IZ8gaH-a0QO6btjRc1AzFu8Y3IcQ==&latitude1=${latitude}&longitude1=${longitude}&latitude2=${event.latitude}&longitude2=${event.longitude}`));
+      const weatherPromises = events.map(event => axios.get(`https://gg-backend-assignment.azurewebsites.net/api/Weather?code=${WEATHER_API_KEY}&city=${encodeURIComponent(event.cityName)}&date=${event.date}`));
+      const distancePromises = events.map(event => axios.get(`https://gg-backend-assignment.azurewebsites.net/api/Distance?code=${DISTANCE_API_KEY}&latitude1=${latitude}&longitude1=${longitude}&latitude2=${event.latitude}&longitude2=${event.longitude}`));
 
       // Await all promises
       const [weatherResponses, distanceResponses] = await Promise.all([Promise.all(weatherPromises), Promise.all(distancePromises)]);
